@@ -431,6 +431,66 @@ h2 .ln{display:block}
   .hero{gap:24px}
   .contact h2{font-size:clamp(48px,14vw,64px)}
 }
+
+/* ===== mobile hero: option B (left-aligned, smaller photo) + badges on one line ===== */
+@media (max-width:760px){
+  .hero{gap:20px!important;padding-top:20px!important}
+  .portrait{width:112px!important}
+  .hero > .portrait{justify-self:start!important}
+  .portrait .ring{inset:-7px!important}
+  .badges{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px!important;margin-top:24px!important}
+  .badge-item{gap:6px!important}
+  .badge-item img{width:44px!important;max-width:44px!important}
+  .badge-item span{font-size:10px!important;max-width:none!important;line-height:1.25!important}
+}
+
+/* mobile: badges stand alone, no labels */
+@media (max-width:760px){.badge-item span{display:none!important}}
+
+/* mobile: About equation + stats left-aligned */
+@media (max-width:760px){
+.side-a,.side-b,.blend-out{text-align:left!important;justify-items:start!important}
+.blend-op{place-items:start!important;justify-content:start!important;padding:2px 0!important;font-size:28px!important}
+.blend-eq{grid-template-columns:auto 1fr!important;gap:12px!important}
+.blend-eq span:first-child{display:none!important}
+.blend-eq span:last-child{background:linear-gradient(90deg,var(--accent),transparent)!important}
+.blend-out p{margin:0!important}
+.stats .stat{justify-items:start!important;text-align:left!important}
+.stats .stat b{justify-content:flex-start!important}
+}
+
+/* mobile: equation reads as one section, no inner divider lines */
+@media (max-width:760px){
+  .side-b{border-top:0!important;padding-top:6px!important}
+  .blend-eq span{display:none!important}
+  .blend-eq{margin:4px 0!important}
+}
+
+/* drop static dividers that double up with the animated section lines */
+.stats{border-bottom:0!important}
+.x-case:last-child{border-bottom:0!important}
+.x-case:last-child::after{bottom:0}
+
+/* ===== stronger section transitions ===== */
+#work,#experience,#contact{margin-top:104px!important}
+#work::before,#experience::before,#contact::before{height:2px!important;background:linear-gradient(90deg,transparent,var(--accent2) 15%,var(--accent) 50%,var(--accent2) 85%,transparent)!important;box-shadow:0 0 14px rgba(86,6,255,.55)}
+@media (max-width:760px){#work,#experience,#contact{margin-top:72px!important}}
+/* mobile: section name pill flashes at the bottom when you enter a new section */
+@media (max-width:900px){
+  .sec-ind{display:flex!important;left:50%!important;right:auto!important;bottom:calc(18px + env(safe-area-inset-bottom,0px))!important;transform:translate(-50%,12px);background:rgba(14,14,14,.88);border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:999px;padding:9px 16px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0!important;transition:opacity .35s ease,transform .35s ease!important}
+  .sec-ind::before{display:none!important}
+  .sec-ind.flash{opacity:1!important;transform:translate(-50%,0)}
+}
+
+/* ===== desktop parity: section pill + badges without labels ===== */
+.badge-item span{display:none!important}
+.sec-ind{display:flex!important;left:50%!important;right:auto!important;bottom:calc(22px + env(safe-area-inset-bottom,0px))!important;transform:translate(-50%,12px);background:rgba(14,14,14,.88);border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:999px;padding:9px 16px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0!important;transition:opacity .35s ease,transform .35s ease!important}
+.sec-ind::before{display:none!important}
+.sec-ind.flash{opacity:1!important;transform:translate(-50%,0)}
+
+/* experience pills: show + affordance; turns into x when open */
+.caps .cap i{display:inline-block!important;font-style:normal;font-size:15px!important;line-height:1;color:var(--accent)!important;margin-left:2px;transition:transform .3s ease,color .25s ease!important}
+.caps .cap[aria-expanded="true"] i{color:#fff!important;transform:rotate(45deg)}
 </style>
 
 <canvas id="bg" aria-hidden="true"></canvas>
@@ -711,7 +771,7 @@ function upd(){var c=null;ids.forEach(function(id){var el=document.getElementByI
  if(innerHeight+scrollY>=document.documentElement.scrollHeight-4)c='contact';
  if(c===cur)return;cur=c;
  Object.keys(tints).forEach(function(k){tints[k].classList.toggle('on',k===c)});
- if(!ind)return;ind.classList.toggle('vis',!!c);if(!c)return;
+ if(!ind)return;ind.classList.toggle('vis',!!c);if(!c)return;ind.classList.add('flash');clearTimeout(window.__secFl);window.__secFl=setTimeout(function(){ind.classList.remove('flash')},1800);
  t.classList.add('swap');setTimeout(function(){n.textContent='0'+(ids.indexOf(c)+1);t.textContent=names[c];t.classList.remove('swap')},180)}
 addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);upd();
 if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('sec-in');else if(e.boundingClientRect.top>0)e.target.classList.remove('sec-in')})},{rootMargin:'0px 0px -15% 0px'});
